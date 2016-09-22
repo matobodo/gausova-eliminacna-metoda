@@ -2,19 +2,22 @@
 
 int main()
 {//while(0 == 0){
-    FILE *f = fopen("C:/Programovanie/build-gausova-eliminacna-metoda-Desktop_Qt_5_7_0_MinGW_32bit-Debug/vstup.txt", "r");
-    //printf("Zadaj pocet rovnic: ");
+    //FILE *f = fopen("C:/Programovanie/build-gausova-eliminacna-metoda-Desktop_Qt_5_7_0_MinGW_32bit-Debug/vstup.txt", "r");
+    printf("Zadaj pocet rovnic: ");
     int rovnic;
-    fscanf(f, "%i", &rovnic);
-    //printf("Zadaj pocet premennych: ");
+    scanf("%i", &rovnic);
+    //fscanf(f, "%i", &rovnic);
+    printf("Zadaj pocet premennych: ");
     int premennych;
-    fscanf(f, "%i", &premennych);
+    scanf("%i", &premennych);
+    //fscanf(f, "%i", &premennych);
 
     float matica[rovnic][premennych + 1];
-    //printf("Zadaj maticu:\n");
+    printf("Zadaj maticu:\n");
     for (int r = 0; r < rovnic; ++r) {
         for (int p = 0; p < premennych + 1; ++p) {
-            fscanf(f, "%f", &matica[r][p]);
+            scanf("%f", &matica[r][p]);
+            //fscanf(f, "%f", &matica[r][p]);
         }
     }
 
@@ -58,9 +61,8 @@ int main()
         }
     }
 
-    stlpec = premennych - 1;
-    for (int r = rovnic - 1; r >= 0; --r) { // nulovanie
-        int dalsiStlpec = 0;
+    stlpec = 0;
+    for (int r = 0; r < rovnic; ++r) {
         for (int R = r - 1; R >= 0; --R) {
             if (matica[r][stlpec] != 0.0F) { // ak je pivotny prvok nulovy, vynecham ho
                 float nasobok = matica[R][stlpec]; // o riadok vyssie rovnaka premenna
@@ -69,12 +71,12 @@ int main()
                         matica[R][P] -= nasobok*matica[r][P];
                     }
                 }
-                dalsiStlpec = 1;
             }
         }
-        if (dalsiStlpec == 1 && stlpec - 1 >= 0) { // presun na dalsi stlpec len ak je pivotny prvok nenulovy
-            stlpec--;
+        if (matica[r][stlpec] == 0) { // ak som nemal pivotnu jednotku kontrolujem dalsiu neznamu
+            r--;
         }
+        stlpec++;
     }
 
     for (int r = 0; r < rovnic; ++r) { // vypis vyslednej matice
@@ -82,6 +84,18 @@ int main()
             printf("%f ", matica[r][p]);
         }
         printf("\n");
+    }
+
+    for (int r = 0; r < rovnic; ++r) { // vypis vyslednych rovnic
+        for (int p = 0; p < premennych + 1; ++p) {
+            if (p < premennych) {
+                if (matica[r][p] != 0.0F)
+                    printf("%c %.2fx%d ",matica[r][p] < 0 ? ' ' : '+' , matica[r][p], p + 1);
+            } else {
+                printf("= %.2f\n", matica[r][p]);
+            }
+
+        }
     }
 //}
     return 0;
