@@ -26,7 +26,7 @@ int main()
         }
         for (int R = r + 1; R < rovnic; ++R) { // vynulovanie stlpca
             float nasobok = matica[R][r]; // vzdy o riadok nizsie rovnaka premenna
-            if (nasobok == 0.0F) { // ak je nulovy nema zmysel odpocitavat
+            if (nasobok != 0.0F) { // ak je nulovy nema zmysel odpocitavat
                 for (int P = r; P < premennych + 1; ++P) {
                     matica[R][P] -= nasobok*matica[r][P];
                 }
