@@ -17,8 +17,11 @@ int gcd(int _a, int _b)
     int a = max(_a, _b);
     int b = min(_a, _b);
     int x;
-    x = b != 0 ? a - (a / b) * b : -1;
+    x = b != 0 ? a - (a / b) * b :  a != 0 ? -2 : -1;
     switch (x) {
+    case -2:
+        return a;
+        break;
     case -1:
         return 1;
         break;
@@ -44,14 +47,13 @@ int main()
     fscanf(f, "%d", &premennych);
 
     float matica[rovnic][premennych + 1];
-    float citatel[rovnic][premennych + 1];
-    float menovatel[rovnic][premennych + 1];
+    int citatel[rovnic][premennych + 1];
+    int menovatel[rovnic][premennych + 1];
     //printf("Zadaj maticu:\n");
     for (int r = 0; r < rovnic; ++r) {
         for (int p = 0; p < premennych + 1; ++p) {
-            //scanf("%f", &matica[r][p]);
-            fscanf(f, "%f", &matica[r][p]);
-            citatel[r][p] = matica[r][p];
+            //scanf("%d", &citatel[r][p]);
+            fscanf(f, "%d", &citatel[r][p]);
             menovatel[r][p] = 1;
         }
     }
@@ -59,21 +61,21 @@ int main()
 
     int stlpec = 0;
     for (int r = 0; r < rovnic; ++r) { // na trojuholnik
-        float nasobokC = citatel[r][stlpec]; // prvok na diagonale
-        float nasobokM = menovatel[r][stlpec]; // prvok na diagonale
-        if (nasobokC != nasobokM && nasobokC != 0.0F) { // ak je rovny jednej alebo nulovy nema zmysel delit
+        int nasobokC = citatel[r][stlpec]; // prvok na diagonale
+        int nasobokM = menovatel[r][stlpec]; // prvok na diagonale
+        if (nasobokC != nasobokM && nasobokC != 0) { // ak je rovny jednej alebo nulovy nema zmysel delit
             for (int p = stlpec; p < premennych + 1; ++p) { // ziskanie pivotnej jednotky a vydelenie ostatnych prvkov
                 citatel[r][p] *= nasobokM;
                 menovatel[r][p] *= nasobokC;
                 r;
                 ///TODO: pridat vykratenie zlomku na r p
             }
-        } else if (nasobokC == 0.0F) { //ak je nulovy prvok na diagonale tak vymen riadky aby bol nenulovy
+        } else if (nasobokC == 0) { //ak je nulovy prvok na diagonale tak vymen riadky aby bol nenulovy
             for (int R = r + 1; R < rovnic; ++R) {
-                if (citatel[R][stlpec] != 0.0F) { // ak som na nenulovom prvku tak vymenim riadky
+                if (citatel[R][stlpec] != 0) { // ak som na nenulovom prvku tak vymenim riadky
                     for (int P = stlpec; P < premennych + 1; ++P) {
-                        float c = citatel[r][P];
-                        float m = menovatel[r][P];
+                        int c = citatel[r][P];
+                        int m = menovatel[r][P];
                         citatel[r][P] = citatel[R][P];
                         menovatel[r][P] = menovatel[R][P];
                         citatel[R][P] = c;
@@ -85,12 +87,12 @@ int main()
         }
         if (citatel[r][stlpec] == menovatel[r][stlpec]) { // nulujem len ak mam pivotnu jednotku
             for (int R = r + 1; R < rovnic; ++R) { // vynulovanie stlpca
-                float c = citatel[R][stlpec]; // vzdy o riadok nizsie rovnaka premenna
-                float m = menovatel[R][stlpec]; // vzdy o riadok nizsie rovnaka premenna
-                if (nasobokC != 0.0F) { // ak je nulovy nema zmysel odpocitavat
+                int c = citatel[R][stlpec]; // vzdy o riadok nizsie rovnaka premenna
+                int m = menovatel[R][stlpec]; // vzdy o riadok nizsie rovnaka premenna
+                if (nasobokC != 0) { // ak je nulovy nema zmysel odpocitavat
                     for (int P = stlpec; P < premennych + 1; ++P) {
-                        float citatelR = c * citatel[r][P];
-                        float menovatelR = m * menovatel[r][P];
+                        int citatelR = c * citatel[r][P];
+                        int menovatelR = m * menovatel[r][P];
                         citatel[R][P] = citatel[R][P]*menovatelR - citatelR*menovatel[R][P];
                         menovatel[R][P] *= menovatelR;
                         //int D = gcd(citatel[R][P], menovatel[R][P]); // najvacsi spolocny delitel
@@ -102,9 +104,9 @@ int main()
         }
         if (citatel[r][stlpec] == menovatel[r][stlpec] && stlpec + 1 < premennych) { // presun na dalsi stlpec len ak som dostal pivotnu jednotk
             stlpec++;
-        } else if (citatel[r][stlpec] != 0.0F && citatel[r][stlpec] != menovatel[r][stlpec]) { // ak nemam pivotnu jednotku tak ju ziskaj
+        } else if (citatel[r][stlpec] != 0 && citatel[r][stlpec] != menovatel[r][stlpec]) { // ak nemam pivotnu jednotku tak ju ziskaj
             r--;
-        } else if (citatel[r][stlpec] == 0.0F) { // upravit!! pri viacriadkovych rovniciach sa nemusel dostat nulovy riadok uplne dolu a moze sa hladat na zlom stlpci lebo na nulovom riadku sa dostane na posledny stlpec aj ked su pod nim dalsie riadky ktore mozno vyhovuju
+        } else if (citatel[r][stlpec] == 0) { // upravit!! pri viacriadkovych rovniciach sa nemusel dostat nulovy riadok uplne dolu a moze sa hladat na zlom stlpci lebo na nulovom riadku sa dostane na posledny stlpec aj ked su pod nim dalsie riadky ktore mozno vyhovuju
             stlpec++;
             r--;
         }
@@ -112,7 +114,7 @@ int main()
 
     for (int r = 0; r < rovnic; ++r) {
         for (int p = 0; p < premennych; ++p) {
-            matica[r][p] = citatel[r][p] / menovatel[r][p];
+            matica[r][p] = (float)citatel[r][p] / menovatel[r][p];
         }
     }
 
