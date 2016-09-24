@@ -70,11 +70,11 @@ int main()
                 citatel[r][p] *= nasobokM;
                 menovatel[r][p] *= nasobokC;
                 matica[r][p] /= delitel; /// kontrolny riadok
-                /*int g = gcd(citatel[r][p], menovatel[r][p]); // vykratenie zlomku
+                int g = gcd(citatel[r][p], menovatel[r][p]); // vykratenie zlomku
                 if (g > 1) {
                     citatel[r][p] /= g;
                     menovatel[r][p] /= g;
-                }*/
+                }
             }
         } else if (nasobokC == 0) { //ak je nulovy prvok na diagonale tak vymen riadky aby bol nenulovy
             for (int R = r + 1; R < rovnic; ++R) {
@@ -103,18 +103,18 @@ int main()
                     for (int P = stlpec; P < premennych + 1; ++P) {
                         float citatelR = c * citatel[r][P];
                         float menovatelR = m * menovatel[r][P];
-                        /*int g = gcd(citatelR, menovatelR); // vykratenie zlomku
+                        int g = gcd(citatelR, menovatelR); // vykratenie zlomku
                         if (g > 1) {
                             citatelR /= g;
                             menovatelR /= g;
-                        }*/
+                        }
                         citatel[R][P] = citatel[R][P]*menovatelR - citatelR*menovatel[R][P];
                         menovatel[R][P] *= menovatelR;
-                        /*g = gcd(citatel[R][P], menovatel[R][P]); // vykratenie zlomku
+                        g = gcd(citatel[R][P], menovatel[R][P]); // vykratenie zlomku
                         if (g > 1) {
                             citatel[R][P] /= g;
                             menovatel[R][P] /= g;
-                        }*/
+                        }
                         matica[R][P] -= nasobok*matica[r][P]; /// kontrolny riadok
                     }
                 }
