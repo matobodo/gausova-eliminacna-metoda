@@ -47,13 +47,14 @@ int main()
     fscanf(f, "%d", &premennych);
 
     float matica[rovnic][premennych + 1];
-    int citatel[rovnic][premennych + 1];
-    int menovatel[rovnic][premennych + 1];
+    float citatel[rovnic][premennych + 1];
+    float menovatel[rovnic][premennych + 1];
     //printf("Zadaj maticu:\n");
     for (int r = 0; r < rovnic; ++r) {
         for (int p = 0; p < premennych + 1; ++p) {
-            //scanf("%d", &citatel[r][p]);
-            fscanf(f, "%d", &citatel[r][p]);
+            //scanf("%f", &citatel[r][p]);
+            fscanf(f, "%f", &citatel[r][p]);
+            matica[r][p] = citatel[r][p];
             menovatel[r][p] = 1;
         }
     }
@@ -61,21 +62,24 @@ int main()
 
     int stlpec = 0;
     for (int r = 0; r < rovnic; ++r) { // na trojuholnik
-        int nasobokC = citatel[r][stlpec]; // prvok na diagonale
-        int nasobokM = menovatel[r][stlpec]; // prvok na diagonale
+        float nasobokC = citatel[r][stlpec]; // prvok na diagonale
+        float nasobokM = menovatel[r][stlpec]; // prvok na diagonale
         if (nasobokC != nasobokM && nasobokC != 0) { // ak je rovny jednej alebo nulovy nema zmysel delit
             for (int p = stlpec; p < premennych + 1; ++p) { // ziskanie pivotnej jednotky a vydelenie ostatnych prvkov
                 citatel[r][p] *= nasobokM;
                 menovatel[r][p] *= nasobokC;
-                r;
-                ///TODO: pridat vykratenie zlomku na r p
+                /*int g = gcd(citatel[r][p], menovatel[r][p]); // vykratenie zlomku
+                if (g > 1) {
+                    citatel[r][p] /= g;
+                    menovatel[r][p] /= g;
+                }*/
             }
         } else if (nasobokC == 0) { //ak je nulovy prvok na diagonale tak vymen riadky aby bol nenulovy
             for (int R = r + 1; R < rovnic; ++R) {
                 if (citatel[R][stlpec] != 0) { // ak som na nenulovom prvku tak vymenim riadky
                     for (int P = stlpec; P < premennych + 1; ++P) {
-                        int c = citatel[r][P];
-                        int m = menovatel[r][P];
+                        float c = citatel[r][P];
+                        float m = menovatel[r][P];
                         citatel[r][P] = citatel[R][P];
                         menovatel[r][P] = menovatel[R][P];
                         citatel[R][P] = c;
@@ -87,17 +91,24 @@ int main()
         }
         if (citatel[r][stlpec] == menovatel[r][stlpec]) { // nulujem len ak mam pivotnu jednotku
             for (int R = r + 1; R < rovnic; ++R) { // vynulovanie stlpca
-                int c = citatel[R][stlpec]; // vzdy o riadok nizsie rovnaka premenna
-                int m = menovatel[R][stlpec]; // vzdy o riadok nizsie rovnaka premenna
+                float c = citatel[R][stlpec]; // vzdy o riadok nizsie rovnaka premenna
+                float m = menovatel[R][stlpec]; // vzdy o riadok nizsie rovnaka premenna
                 if (nasobokC != 0) { // ak je nulovy nema zmysel odpocitavat
                     for (int P = stlpec; P < premennych + 1; ++P) {
-                        int citatelR = c * citatel[r][P];
-                        int menovatelR = m * menovatel[r][P];
+                        float citatelR = c * citatel[r][P];
+                        float menovatelR = m * menovatel[r][P];
+                        /*int g = gcd(citatelR, menovatelR); // vykratenie zlomku
+                        if (g > 1) {
+                            citatelR /= g;
+                            menovatelR /= g;
+                        }*/
                         citatel[R][P] = citatel[R][P]*menovatelR - citatelR*menovatel[R][P];
                         menovatel[R][P] *= menovatelR;
-                        //int D = gcd(citatel[R][P], menovatel[R][P]); // najvacsi spolocny delitel
-                        //citatel[R][P] /= D;
-                        //menovatel[R][P] /= D;
+                        /*g = gcd(citatel[R][P], menovatel[R][P]); // vykratenie zlomku
+                        if (g > 1) {
+                            citatel[R][P] /= g;
+                            menovatel[R][P] /= g;
+                        }*/
                     }
                 }
             }
