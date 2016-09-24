@@ -64,10 +64,12 @@ int main()
     for (int r = 0; r < rovnic; ++r) { // na trojuholnik
         float nasobokC = citatel[r][stlpec]; // prvok na diagonale
         float nasobokM = menovatel[r][stlpec]; // prvok na diagonale
+        float delitel = matica[r][stlpec]; /// kontrolny riadok
         if (nasobokC != nasobokM && nasobokC != 0) { // ak je rovny jednej alebo nulovy nema zmysel delit
             for (int p = stlpec; p < premennych + 1; ++p) { // ziskanie pivotnej jednotky a vydelenie ostatnych prvkov
                 citatel[r][p] *= nasobokM;
                 menovatel[r][p] *= nasobokC;
+                matica[r][p] /= delitel; /// kontrolny riadok
                 /*int g = gcd(citatel[r][p], menovatel[r][p]); // vykratenie zlomku
                 if (g > 1) {
                     citatel[r][p] /= g;
@@ -84,6 +86,9 @@ int main()
                         menovatel[r][P] = menovatel[R][P];
                         citatel[R][P] = c;
                         menovatel[R][P] = m;
+                        float m1 = matica[r][P]; /// kontrolny riadok
+                        matica[r][P] = matica[R][P]; /// kontrolny riadok
+                        matica[R][P] = m1; /// kontrolny riadok
                     }
                     R = rovnic; // ukoncenie hladania po vymene
                 }
@@ -93,6 +98,7 @@ int main()
             for (int R = r + 1; R < rovnic; ++R) { // vynulovanie stlpca
                 float c = citatel[R][stlpec]; // vzdy o riadok nizsie rovnaka premenna
                 float m = menovatel[R][stlpec]; // vzdy o riadok nizsie rovnaka premenna
+                float nasobok = matica[R][stlpec]; /// kontrolny riadok
                 if (nasobokC != 0) { // ak je nulovy nema zmysel odpocitavat
                     for (int P = stlpec; P < premennych + 1; ++P) {
                         float citatelR = c * citatel[r][P];
@@ -109,6 +115,7 @@ int main()
                             citatel[R][P] /= g;
                             menovatel[R][P] /= g;
                         }*/
+                        matica[R][P] -= nasobok*matica[r][P]; /// kontrolny riadok
                     }
                 }
             }
