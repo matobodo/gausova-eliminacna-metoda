@@ -132,7 +132,7 @@ int main()
 
     for (int r = 0; r < rovnic; ++r) {
         for (int p = 0; p < premennych; ++p) {
-            matica[r][p] = (float)citatel[r][p] / menovatel[r][p];
+            matica[r][p] = citatel[r][p] / menovatel[r][p];
         }
     }
 
