@@ -46,7 +46,6 @@ int main()
     //scanf("%d", &premennych);
     fscanf(f, "%d", &premennych);
 
-    float matica[rovnic][premennych + 1];
     float citatel[rovnic][premennych + 1];
     float menovatel[rovnic][premennych + 1];
     //printf("Zadaj maticu:\n");
@@ -54,7 +53,6 @@ int main()
         for (int p = 0; p < premennych + 1; ++p) {
             //scanf("%f", &citatel[r][p]);
             fscanf(f, "%f", &citatel[r][p]);
-            matica[r][p] = citatel[r][p];
             menovatel[r][p] = 1;
         }
     }
@@ -64,12 +62,10 @@ int main()
     for (int r = 0; r < rovnic; ++r) { // na trojuholnik
         float nasobokC = citatel[r][stlpec]; // prvok na diagonale
         float nasobokM = menovatel[r][stlpec]; // prvok na diagonale
-        float delitel = matica[r][stlpec]; /// kontrolny riadok
         if (nasobokC != nasobokM && nasobokC != 0) { // ak je rovny jednej alebo nulovy nema zmysel delit
             for (int p = stlpec; p < premennych + 1; ++p) { // ziskanie pivotnej jednotky a vydelenie ostatnych prvkov
                 citatel[r][p] *= nasobokM;
                 menovatel[r][p] *= nasobokC;
-                matica[r][p] /= delitel; /// kontrolny riadok
                 int g = gcd(citatel[r][p], menovatel[r][p]); // vykratenie zlomku
                 if (g > 1) {
                     citatel[r][p] /= g;
@@ -86,9 +82,6 @@ int main()
                         menovatel[r][P] = menovatel[R][P];
                         citatel[R][P] = c;
                         menovatel[R][P] = m;
-                        float m1 = matica[r][P]; /// kontrolny riadok
-                        matica[r][P] = matica[R][P]; /// kontrolny riadok
-                        matica[R][P] = m1; /// kontrolny riadok
                     }
                     R = rovnic; // ukoncenie hladania po vymene
                 }
@@ -98,7 +91,6 @@ int main()
             for (int R = r + 1; R < rovnic; ++R) { // vynulovanie stlpca
                 float c = citatel[R][stlpec]; // vzdy o riadok nizsie rovnaka premenna
                 float m = menovatel[R][stlpec]; // vzdy o riadok nizsie rovnaka premenna
-                float nasobok = matica[R][stlpec]; /// kontrolny riadok
                 if (nasobokC != 0) { // ak je nulovy nema zmysel odpocitavat
                     for (int P = stlpec; P < premennych + 1; ++P) {
                         float citatelR = c * citatel[r][P];
@@ -115,7 +107,6 @@ int main()
                             citatel[R][P] /= g;
                             menovatel[R][P] /= g;
                         }
-                        matica[R][P] -= nasobok*matica[r][P]; /// kontrolny riadok
                     }
                 }
             }
@@ -136,7 +127,6 @@ int main()
             if (citatel[r][stlpec] != 0.0F) { // ak je pivotny prvok nulovy, vynecham ho
                 float c = citatel[R][stlpec]; // o riadok vyssie rovnaka premenna
                 float m = menovatel[R][stlpec]; // o riadok vyssie rovnaka premenna
-                float nasobok = matica[R][stlpec]; // o riadok vyssie rovnaka premenna
                 if (c != 0.0F) { // ak je nulovy nema zmysel odpocitavat
                     for (int P = stlpec; P < premennych + 1; ++P) { // vynulovanie stlpca
                         float citatelR = c * citatel[r][P];
@@ -148,7 +138,6 @@ int main()
                         }
                         citatel[R][P] = citatel[R][P]*menovatelR - citatelR*menovatel[R][P];
                         menovatel[R][P] *= menovatelR;
-                        matica[R][P] -= nasobok*matica[r][P]; /// kontrolny riadok
                     }
                 }
             }
@@ -169,7 +158,7 @@ int main()
     for (int r = 0; r < rovnic; ++r) { // vypis vyslednych rovnic
         for (int p = 0; p < premennych + 1; ++p) {
             if (p < premennych) {
-                if (matica[r][p] != 0.0F)
+                if (citatel[r][p] != 0.0F)
                     printf("%c %.2fx%d ",citatel[r][p]/menovatel[r][p] < 0 ? ' ' : '+' , citatel[r][p]/menovatel[r][p], p + 1);
             } else {
                 printf("= %.2f\n", citatel[r][p]/menovatel[r][p]);
