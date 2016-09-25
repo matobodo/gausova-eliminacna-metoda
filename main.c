@@ -46,13 +46,13 @@ int main()
     //scanf("%d", &premennych);
     fscanf(f, "%d", &premennych);
 
-    float citatel[rovnic][premennych + 1];
-    float menovatel[rovnic][premennych + 1];
+    int citatel[rovnic][premennych + 1];
+    int menovatel[rovnic][premennych + 1];
     //printf("Zadaj maticu:\n");
     for (int r = 0; r < rovnic; ++r) {
         for (int p = 0; p < premennych + 1; ++p) {
-            //scanf("%f", &citatel[r][p]);
-            fscanf(f, "%f", &citatel[r][p]);
+            //scanf("%d", &citatel[r][p]);
+            fscanf(f, "%d", &citatel[r][p]);
             menovatel[r][p] = 1;
         }
     }
@@ -60,8 +60,8 @@ int main()
 
     int stlpec = 0;
     for (int r = 0; r < rovnic; ++r) { // na trojuholnik
-        float nasobokC = citatel[r][stlpec]; // prvok na diagonale
-        float nasobokM = menovatel[r][stlpec]; // prvok na diagonale
+        int nasobokC = citatel[r][stlpec]; // prvok na diagonale
+        int nasobokM = menovatel[r][stlpec]; // prvok na diagonale
         if (nasobokC != nasobokM && nasobokC != 0) { // ak je rovny jednej alebo nulovy nema zmysel delit
             for (int p = stlpec; p < premennych + 1; ++p) { // ziskanie pivotnej jednotky a vydelenie ostatnych prvkov
                 citatel[r][p] *= nasobokM;
@@ -76,8 +76,8 @@ int main()
             for (int R = r + 1; R < rovnic; ++R) {
                 if (citatel[R][stlpec] != 0) { // ak som na nenulovom prvku tak vymenim riadky
                     for (int P = stlpec; P < premennych + 1; ++P) {
-                        float c = citatel[r][P];
-                        float m = menovatel[r][P];
+                        int c = citatel[r][P];
+                        int m = menovatel[r][P];
                         citatel[r][P] = citatel[R][P];
                         menovatel[r][P] = menovatel[R][P];
                         citatel[R][P] = c;
@@ -89,12 +89,12 @@ int main()
         }
         if (citatel[r][stlpec] == menovatel[r][stlpec]) { // nulujem len ak mam pivotnu jednotku
             for (int R = r + 1; R < rovnic; ++R) { // vynulovanie stlpca
-                float c = citatel[R][stlpec]; // vzdy o riadok nizsie rovnaka premenna
-                float m = menovatel[R][stlpec]; // vzdy o riadok nizsie rovnaka premenna
+                int c = citatel[R][stlpec]; // vzdy o riadok nizsie rovnaka premenna
+                int m = menovatel[R][stlpec]; // vzdy o riadok nizsie rovnaka premenna
                 if (nasobokC != 0) { // ak je nulovy nema zmysel odpocitavat
                     for (int P = stlpec; P < premennych + 1; ++P) {
-                        float citatelR = c * citatel[r][P];
-                        float menovatelR = m * menovatel[r][P];
+                        int citatelR = c * citatel[r][P];
+                        int menovatelR = m * menovatel[r][P];
                         int g = gcd(citatelR, menovatelR); // vykratenie zlomku
                         if (g > 1) {
                             citatelR /= g;
@@ -124,13 +124,13 @@ int main()
     stlpec = 0;
     for (int r = 0; r < rovnic; ++r) {
         for (int R = r - 1; R >= 0; --R) {
-            if (citatel[r][stlpec] != 0.0F) { // ak je pivotny prvok nulovy, vynecham ho
-                float c = citatel[R][stlpec]; // o riadok vyssie rovnaka premenna
-                float m = menovatel[R][stlpec]; // o riadok vyssie rovnaka premenna
-                if (c != 0.0F) { // ak je nulovy nema zmysel odpocitavat
+            if (citatel[r][stlpec] != 0) { // ak je pivotny prvok nulovy, vynecham ho
+                int c = citatel[R][stlpec]; // o riadok vyssie rovnaka premenna
+                int m = menovatel[R][stlpec]; // o riadok vyssie rovnaka premenna
+                if (c != 0) { // ak je nulovy nema zmysel odpocitavat
                     for (int P = stlpec; P < premennych + 1; ++P) { // vynulovanie stlpca
-                        float citatelR = c * citatel[r][P];
-                        float menovatelR = m * menovatel[r][P];
+                        int citatelR = c * citatel[r][P];
+                        int menovatelR = m * menovatel[r][P];
                         int g = gcd(citatelR, menovatelR); // vykratenie zlomku
                         if (g > 1) {
                             citatelR /= g;
@@ -150,7 +150,7 @@ int main()
 
     for (int r = 0; r < rovnic; ++r) { // vypis vyslednej matice
         for (int p = 0; p < premennych + 1; ++p) {
-            printf("%f ", citatel[r][p]/menovatel[r][p]);
+            printf("%f ", (float)citatel[r][p]/menovatel[r][p]);
         }
         printf("\n");
     }
@@ -158,10 +158,10 @@ int main()
     for (int r = 0; r < rovnic; ++r) { // vypis vyslednych rovnic
         for (int p = 0; p < premennych + 1; ++p) {
             if (p < premennych) {
-                if (citatel[r][p] != 0.0F)
-                    printf("%c %.2fx%d ",citatel[r][p]/menovatel[r][p] < 0 ? ' ' : '+' , citatel[r][p]/menovatel[r][p], p + 1);
+                if (citatel[r][p] != 0)
+                    printf("%c %.2fx%d ",(float)citatel[r][p]/menovatel[r][p] < 0 ? ' ' : '+' , (float)citatel[r][p]/menovatel[r][p], p + 1);
             } else {
-                printf("= %.2f\n", citatel[r][p]/menovatel[r][p]);
+                printf("= %.2f\n", (float)citatel[r][p]/menovatel[r][p]);
             }
 
         }
