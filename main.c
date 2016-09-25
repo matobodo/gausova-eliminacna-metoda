@@ -150,20 +150,22 @@ int main()
 
     for (int r = 0; r < rovnic; ++r) { // vypis vyslednej matice
         for (int p = 0; p < premennych + 1; ++p) {
-            printf("%f ", (float)citatel[r][p]/menovatel[r][p]);
+            if (p < premennych) {
+                printf("%.4f ", (float)citatel[r][p]/menovatel[r][p]);
+            } else {
+                printf("%.4f = %d / %d\n", (float)citatel[r][p]/menovatel[r][p], citatel[r][p], menovatel[r][p]);
+            }
         }
-        printf("\n");
     }
 
     for (int r = 0; r < rovnic; ++r) { // vypis vyslednych rovnic
         for (int p = 0; p < premennych + 1; ++p) {
             if (p < premennych) {
                 if (citatel[r][p] != 0)
-                    printf("%c %.2fx%d ",(float)citatel[r][p]/menovatel[r][p] < 0 ? ' ' : '+' , (float)citatel[r][p]/menovatel[r][p], p + 1);
+                    printf("%c %.4fx%d ",(float)citatel[r][p]/menovatel[r][p] < 0 ? ' ' : '+' , (float)citatel[r][p]/menovatel[r][p], p + 1);
             } else {
-                printf("= %.2f\n", (float)citatel[r][p]/menovatel[r][p]);
+                printf("= %.4f = %d / %d\n", (float)citatel[r][p]/menovatel[r][p], citatel[r][p], menovatel[r][p]);
             }
-
         }
     }
 //}
