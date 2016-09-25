@@ -130,32 +130,30 @@ int main()
         }
     }
 
-    for (int r = 0; r < rovnic; ++r) {
-        for (int p = 0; p < premennych; ++p) {
-            matica[r][p] = citatel[r][p] / menovatel[r][p];
-        }
-    }
-
-    for (int r = 0; r < rovnic; ++r) { // vypis matice
-        for (int p = 0; p < premennych + 1; ++p) {
-            printf("%f ", matica[r][p]);
-        }
-        printf("\n");
-    }
-
     stlpec = 0;
     for (int r = 0; r < rovnic; ++r) {
         for (int R = r - 1; R >= 0; --R) {
-            if (matica[r][stlpec] != 0.0F) { // ak je pivotny prvok nulovy, vynecham ho
+            if (citatel[r][stlpec] != 0.0F) { // ak je pivotny prvok nulovy, vynecham ho
+                float c = citatel[R][stlpec]; // o riadok vyssie rovnaka premenna
+                float m = menovatel[R][stlpec]; // o riadok vyssie rovnaka premenna
                 float nasobok = matica[R][stlpec]; // o riadok vyssie rovnaka premenna
-                if (nasobok != 0.0F) { // ak je nulovy nema zmysel odpocitavat
+                if (c != 0.0F) { // ak je nulovy nema zmysel odpocitavat
                     for (int P = stlpec; P < premennych + 1; ++P) { // vynulovanie stlpca
-                        matica[R][P] -= nasobok*matica[r][P];
+                        float citatelR = c * citatel[r][P];
+                        float menovatelR = m * menovatel[r][P];
+                        int g = gcd(citatelR, menovatelR); // vykratenie zlomku
+                        if (g > 1) {
+                            citatelR /= g;
+                            menovatelR /= g;
+                        }
+                        citatel[R][P] = citatel[R][P]*menovatelR - citatelR*menovatel[R][P];
+                        menovatel[R][P] *= menovatelR;
+                        matica[R][P] -= nasobok*matica[r][P]; /// kontrolny riadok
                     }
                 }
             }
         }
-        if (matica[r][stlpec] == 0) { // ak som nemal pivotnu jednotku kontrolujem dalsiu neznamu
+        if (citatel[r][stlpec] == 0) { // ak som nemal pivotnu jednotku kontrolujem dalsiu neznamu
             r--;
         }
         stlpec++;
@@ -163,7 +161,7 @@ int main()
 
     for (int r = 0; r < rovnic; ++r) { // vypis vyslednej matice
         for (int p = 0; p < premennych + 1; ++p) {
-            printf("%f ", matica[r][p]);
+            printf("%f ", citatel[r][p]/menovatel[r][p]);
         }
         printf("\n");
     }
@@ -172,9 +170,9 @@ int main()
         for (int p = 0; p < premennych + 1; ++p) {
             if (p < premennych) {
                 if (matica[r][p] != 0.0F)
-                    printf("%c %.2fx%d ",matica[r][p] < 0 ? ' ' : '+' , matica[r][p], p + 1);
+                    printf("%c %.2fx%d ",citatel[r][p]/menovatel[r][p] < 0 ? ' ' : '+' , citatel[r][p]/menovatel[r][p], p + 1);
             } else {
-                printf("= %.2f\n", matica[r][p]);
+                printf("= %.2f\n", citatel[r][p]/menovatel[r][p]);
             }
 
         }
